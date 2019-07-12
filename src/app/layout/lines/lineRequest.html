@@ -1,0 +1,10 @@
+<table id="txTable" class="table table-bordered table-hover" title="{{ 'EXCHANGE_REQUEST_NAME' | translate }}" style="cursor:pointer;outline:0;margin-bottom:0;table-layout:fixed">
+    <tbody style="outline:0;">
+        <tr data-toggle="collapse" data-target="#table{{number}}" style="outline:0">
+            <td class="req_idTx"style="overflow:hidden;text-overflow: ellipsis;"><span class="fa fa-exchange text-success"></span> <tt>{{ tx._id }}</tt></td>
+            <td class="req_stateTx">{{tx.status}}</td>
+            <td class="req_messageTx">{{tx.message}}</td>
+            <td class="req_activeTx">{{tx.active_until}}</td>
+        </tr>
+    </tbody>
+</table>

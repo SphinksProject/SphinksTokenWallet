@@ -1,0 +1,162 @@
+<div class="dashboard-page">
+  <div class="container-fluid main">
+
+    <div class="row">
+      <div class="col-sm-9">
+        <h2>{{ 'EXCHANGE_TRANSACTION_TITLE' | translate }}</h2>
+      </div>
+    </div>
+
+  <div class="row">
+    <div class="col-lg-8 col-md-9">
+      <div class="col-lg-12">
+
+        <div class="panel-heading">
+          <ul class="nav nav-tabs">
+            <li ng-class="$ctrl.showHistory ? '' : 'active'">
+              <a ng-click="$ctrl.showHistory = false;">{{ 'EXCHANGE_REQUEST_FORM' | translate }}</a>
+            </li>
+            <li ng-class="$ctrl.showHistory ? 'active' : ''">
+              <a ng-click="$ctrl.showHistory = true;$ctrl.currentPage = 0">{{ 'EXCHANGE_REQUEST_HISTORY' | translate }}</a>
+            </li>
+            <paginate ng-show="$ctrl.showHistory" data="$ctrl._DataStore.token_issuance_requests" current-page="$ctrl.currentPage" page-size="$ctrl.pageSize"></paginate>
+          </ul>
+        </div>
+
+        <!-- Token exchange form -->
+        <div class="panel-body" ng-show="!$ctrl.showHistory">
+          <fieldset class="form-group">
+            <div class="input-group">
+              <span class="input-group-btn short">
+                <label>BTC {{ 'EXCHANGE_RECEIVER' | translate }}: </label>
+              </span>
+              <span class="form-control">{{ $ctrl.btc_receiver }}</span>
+              <span class="input-group-btn" style="min-width: inherit;">
+                <button class="btn btn-primary" type="button" ng-click="$ctrl.copyBtcReciever();"><i class="fa fa-clipboard" ></i></button>
+              </span>
+            </div>
+          </fieldset>
+          <fieldset class="form-group">
+            <div class="input-group">
+              <span class="input-group-btn short">
+                <label>BTC {{ 'EXCHANGE_SENDER' | translate }}: </label>
+              </span>
+              <input type="text" class="form-control" ng-model="$ctrl.btc_sender" ng-disabled="$ctrl.eth_sender.length > 0" ng-change="$ctrl.prepareTransaction();" maxlength="42" placeholder="{{ 'EXCHANGE_BTC_ADDRESS' | translate }}"/>
+            </div>
+          </fieldset>
+          <fieldset class="form-group">
+            <div class="input-group">
+              <span class="input-group-btn short">
+                <label>ETH {{ 'EXCHANGE_RECEIVER' | translate }}: </label>
+              </span>
+              <span class="form-control">{{ $ctrl.eth_receiver }}</span>
+              <span class="input-group-btn" style="min-width: inherit;">
+                <button class="btn btn-primary" type="button" ng-click="$ctrl.copyEthReciever();"><i class="fa fa-clipboard" ></i></button>
+              </span>
+            </div>
+          </fieldset>
+          <fieldset class="form-group">
+            <div class="input-group">
+              <span class="input-group-btn short">
+                <label>ETH {{ 'EXCHANGE_SENDER' | translate }}: </label>
+              </span>
+              <input type="text" class="form-control" ng-model="$ctrl.eth_sender" ng-disabled="true || $ctrl.btc_sender.length > 0" ng-change="$ctrl.prepareTransaction();" maxlength="42" placeholder="{{ 'EXCHANGE_ETH_NOT_SUPPORTED' | translate }}"/>
+            </div>
+          </fieldset>
+          <!-- Message type -->
+          <fieldset class="form-group">
+            <div class="input-group">
+              <span class="input-group-btn">
+                <label for="box1">{{'TRANSFER_TRANSACTION_MESSAGE_TYPE' | translate}}:</label>
+              </span>
+              <select class="form-control" ng-options="type.value as type.name for type in $ctrl.messageTypes" ng-model="$ctrl.messageType" ng-change="$ctrl.prepareTransaction();"></select>
+            </div>
+          </fieldset>
+          <!-- Transaction fee -->
+          <fee-input tx="$ctrl.preparedTransaction" is-multisig=false></fee-input>
+          <!-- Password Field -->
+          <password-input common="$ctrl.common"></password-input>
+          <button class="btn btn-success" type="submit" ng-disabled="$ctrl.sendDisabled();" ng-click="$ctrl.send()">
+              <i class="fa fa-exchange"></i> {{ 'GENERAL_POST_EXCHANGE_REQUEST' | translate }}
+          </button>
+          </fieldset>
+        </div>
+
+        <!-- Request history form -->
+        <div  id="sphinks-token-history" class="panel-body" ng-show="$ctrl.showHistory">
+          <table class="table table-condensed top_req">
+            <thead>
+              <tr>
+                <th>{{ 'EXCHAGE_REQUEST_ID' | translate }}</th>
+                <th>{{ 'EXCHAGE_REQUEST_STATE' | translate }}</th>
+                <th>{{ 'EXCHAGE_REQUEST_MESSAGE' | translate }}</th>
+                <th>{{ 'EXCHAGE_REQUEST_ACTIVE_UNTIL' | translate }}</th>
+              </tr>
+            </thead>
+          </table>
+
+          <table class="table">
+            <tbody>
+              <div>
+                <div ng-repeat="tx in $ctrl._DataStore.token_issuance_requests | orderBy:'-creation_timestamp' | startFrom:$ctrl.currentPage*$ctrl.pageSize | limitTo:$ctrl.pageSize">
+                  <tag-request d="tx" tooltip-position="'left'"></tag-request>
+                </div>
+              </div>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Result -->
+        <!--
+        <div class="panel-body" ng-show="$ctrl.status == 'SUCCESS' || $ctrl.status == 'ERROR' || $ctrl.status == 'REJECTED'">
+          <fieldset class="form-group">
+            <div class="input-group">
+              <span class="input-group-btn short">
+                <label></label>
+              </span>
+              <label class="floatRight"><small>{{$ctrl.status}}: {{$ctrl.msg}}; {{ 'EXCHANGE_ID' | translate }}: {{$ctrl.id}}</small></label>
+            </div>
+          </fieldset>
+        </div>
+        -->
+
+        <div>
+          <br>
+          <h1>{{ 'EXCHANGE_NOTICE_1' | translate }}</h1>
+          <h5 ng-bind-html="'EXCHANGE_NOTICE_2' | translate"></h5>
+          <p>
+            <span ng-bind-html="'EXCHANGE_NOTICE_3' | translate"></span>
+          </p>
+          <p>
+            <span ng-bind-html="'EXCHANGE_NOTICE_4' | translate"></span>
+          </p>
+          <p>
+            <span ng-bind-html="'EXCHANGE_NOTICE_5' | translate"></span>
+          </p>
+          <p>
+            <span ng-bind-html="'EXCHANGE_NOTICE_6' | translate"></span>
+          </p>
+          <p>
+            <span ng-bind-html="'EXCHANGE_NOTICE_7' | translate"></span>
+          </p>
+          <p>
+            <span ng-bind-html="'EXCHANGE_NOTICE_8' | translate"></span>
+          </p>
+          <p>
+            <span ng-bind-html="'EXCHANGE_NOTICE_9' | translate"></span>
+          </p>
+        </div>
+
+      </div>
+    </div>
+
+      <!-- UPDATES SECTION -->
+      <div class="col-lg-3 col-lg-offset-1 col-md-3 col-md-offset-0 col-sm-12 col-sm-offset-0 updates">
+        <!-- QUEUE INFO WIDGET -->
+        <queue-data></queue-data>
+        <!-- EXCHANGE INFO WIDGET -->
+        <exchange-data></exchange-data>
+      </div>
+    </div>
+  </div>
+</div>

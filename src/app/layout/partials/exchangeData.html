@@ -1,0 +1,24 @@
+<!-- MARKET INFO WIDGET -->
+<div class="market-info" ng-show="true">
+  <h4> {{ 'EXCHANGE_INFO_TITLE' | translate }} </h4>
+  <div class="row">
+    <div class="col-md-6 col-sm-3 header">
+      {{ 'EXCHANGE_BITCOIN' | translate }} (USD):
+      <br>
+      <span> {{$ctrl.btc_rate | currencyFormat}}</span>
+    </div>
+    <div class="col-md-6 col-sm-3 header">
+      <br>
+      <span>&nbsp;</span>
+    </div>
+    <div class="col-md-6 col-sm-3 header ticker">
+      {{ 'EXCHANGE_ETHEREUM' | translate }} (USD):
+      <br>
+      <span>{{$ctrl.eth_rate | currencyFormat}}</span>
+    </div>
+    <div class="col-md-6 col-sm-3 header">
+      <br>
+      <span>&nbsp;</span>
+    </div>
+  </div>
+</div>
